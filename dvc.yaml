@@ -3,28 +3,27 @@
 
 # The complete process can be executed using:
 # dvc repro
-# If you want to force redoing the process use 
+# If you want to force redoing the process use
 # dvc repro -f
-# Individual stage can be executed using: 
+# Individual stage can be executed using:
 # dvc repro <stage>
 
 stages:
+  list:
+    cmd: stages/01_list.sh
+    deps:
+      - stages/01_list.sh
+    outs:
+      - list
   download:
-    cmd: stages/01_download.sh
+    cmd: stages/02_download.sh
     deps:
-      - stages/01_download.sh
-    outs:
-      - download
-      - list
-  unzip: 
-    cmd: stages/02_unzip.sh
-    deps:
-      - stages/02_unzip.sh
-      - download
+      - stages/02_download.sh
       - list
     outs:
-      - raw
-  build: 
+      - download:
+          persist: true # Allow the stage to avoid downloading unchanged files
+  build:
     cmd: stages/03_build.sh
     deps:
       - stages/03_build.sh
