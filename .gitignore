@@ -1,3 +1,12 @@
+.*
+!.dvc/config
+!.dvcignore
+!.editorconfig
+!.envrc
+!.github
+!.gitignore
+
 logs
 /download
 /list
+result

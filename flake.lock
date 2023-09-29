@@ -1,0 +1,180 @@
+{
+  "nodes": {
+    "biobricks-R": {
+      "inputs": {
+        "flake-utils": [
+          "dev-shell",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "dev-shell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1695748726,
+        "narHash": "sha256-+PyXIuejK2ck4HlZzoJQQ/Ucu/7HonEfB4wuhcsBjKU=",
+        "owner": "biobricks-ai",
+        "repo": "biobricks-R",
+        "rev": "c22e6b225d11a4cbd472b70fdc5b6c6f4acf5a53",
+        "type": "github"
+      },
+      "original": {
+        "owner": "biobricks-ai",
+        "repo": "biobricks-R",
+        "type": "github"
+      }
+    },
+    "dev-shell": {
+      "inputs": {
+        "biobricks-R": "biobricks-R",
+        "flake-utils": "flake-utils",
+        "hdt-cpp": "hdt-cpp",
+        "morph-kgc": "morph-kgc",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1696004739,
+        "narHash": "sha256-ir2KkQuw75ubp2MX4bHXDCawE0yDsap46Tidka91NSo=",
+        "owner": "biobricks-ai",
+        "repo": "dev-shell",
+        "rev": "c61ec5a4d3449226ab545371e14b31e62c7eb6b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "biobricks-ai",
+        "repo": "dev-shell",
+        "type": "github"
+      }
+    },
+    "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
+      "locked": {
+        "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
+        "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
+        "revCount": 87,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/numtide/flake-utils/0.1.87+rev-ff7b65b44d01cf9ba6a71320833626af21126384/018a8a74-649b-792e-a959-2f97793b1129/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/numtide/flake-utils/*.tar.gz"
+      }
+    },
+    "hdt-cpp": {
+      "inputs": {
+        "flake-utils": [
+          "dev-shell",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "dev-shell",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1695663107,
+        "narHash": "sha256-uYHG4+WvYykdWWU2LjmirgenMKpZ6+E1otmztIdQBPc=",
+        "owner": "insilica",
+        "repo": "nix-hdt",
+        "rev": "5451dd285423e5a2c386dc05b1bf10d93654df56",
+        "type": "github"
+      },
+      "original": {
+        "owner": "insilica",
+        "repo": "nix-hdt",
+        "type": "github"
+      }
+    },
+    "morph-kgc": {
+      "inputs": {
+        "flake-utils": [
+          "dev-shell",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "dev-shell",
+          "nixpkgs"
+        ],
+        "poetry2nix": "poetry2nix"
+      },
+      "locked": {
+        "lastModified": 1695678755,
+        "narHash": "sha256-x8Vw79qjOVtK5FPUe3q0vBUpbuPBPVZ/FEupiMN+6R4=",
+        "owner": "insilica",
+        "repo": "nix-morph-kgc",
+        "rev": "884a9570682288dbd770523f031fa38bdd38e4f9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "insilica",
+        "repo": "nix-morph-kgc",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "narHash": "sha256-4Ne11kNRnQsmSJCRSSNkFRSnHC4Y5gPDBIQGjjPfJiU=",
+        "rev": "5cfafa12d57374f48bcc36fda3274ada276cf69e",
+        "revCount": 491245,
+        "type": "tarball",
+        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2305.491245+rev-5cfafa12d57374f48bcc36fda3274ada276cf69e/018adbc4-3796-7d17-a794-61091c15d9d2/source.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://flakehub.com/f/NixOS/nixpkgs/*.tar.gz"
+      }
+    },
+    "poetry2nix": {
+      "inputs": {
+        "flake-utils": [
+          "dev-shell",
+          "morph-kgc",
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "dev-shell",
+          "morph-kgc",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1674537260,
+        "narHash": "sha256-DTki81bWzHHRka0ZLayYS5La3t+npRVZvfDH8mx/Las=",
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "rev": "a20e27e0555621d35de171270cd041631fc7cb23",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "poetry2nix",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "dev-shell": "dev-shell"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
