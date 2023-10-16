@@ -34,11 +34,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1696004739,
-        "narHash": "sha256-ir2KkQuw75ubp2MX4bHXDCawE0yDsap46Tidka91NSo=",
+        "lastModified": 1697471982,
+        "narHash": "sha256-uWUObHxB1SD4V68Ofm3RzlYgJm2TurkdYxlLhzm0two=",
         "owner": "biobricks-ai",
         "repo": "dev-shell",
-        "rev": "c61ec5a4d3449226ab545371e14b31e62c7eb6b6",
+        "rev": "27904dcfdb492c52c64ed85316a789a9707659d8",
         "type": "github"
       },
       "original": {
@@ -52,15 +52,17 @@
         "systems": "systems"
       },
       "locked": {
+        "lastModified": 1694529238,
         "narHash": "sha256-zsNZZGTGnMOf9YpHKJqMSsa0dXbfmxeoJ7xHlrt+xmY=",
+        "owner": "numtide",
+        "repo": "flake-utils",
         "rev": "ff7b65b44d01cf9ba6a71320833626af21126384",
-        "revCount": 87,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/numtide/flake-utils/0.1.87+rev-ff7b65b44d01cf9ba6a71320833626af21126384/018a8a74-649b-792e-a959-2f97793b1129/source.tar.gz"
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/numtide/flake-utils/*.tar.gz"
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
       }
     },
     "hdt-cpp": {
@@ -116,15 +118,18 @@
     },
     "nixpkgs": {
       "locked": {
-        "narHash": "sha256-4Ne11kNRnQsmSJCRSSNkFRSnHC4Y5gPDBIQGjjPfJiU=",
-        "rev": "5cfafa12d57374f48bcc36fda3274ada276cf69e",
-        "revCount": 491245,
-        "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2305.491245+rev-5cfafa12d57374f48bcc36fda3274ada276cf69e/018adbc4-3796-7d17-a794-61091c15d9d2/source.tar.gz"
+        "lastModified": 1697226376,
+        "narHash": "sha256-cumLLb1QOUtWieUnLGqo+ylNt3+fU8Lcv5Zl+tYbRUE=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "898cb2064b6e98b8c5499f37e81adbdf2925f7c5",
+        "type": "github"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://flakehub.com/f/NixOS/nixpkgs/*.tar.gz"
+        "owner": "nixos",
+        "ref": "nixos-23.05",
+        "repo": "nixpkgs",
+        "type": "github"
       }
     },
     "poetry2nix": {
