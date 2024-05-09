@@ -14,21 +14,20 @@ stages:
     deps:
       - stages/01_list.sh
     outs:
-      - list
+      - data
   download:
     cmd: stages/02_download.sh
     deps:
       - stages/02_download.sh
-      - list
+      - data
     outs:
       - download:
           persist: true # Allow the stage to avoid downloading unchanged files
-  build:
-    cmd: stages/03_build.sh
+  unzip:
+    cmd: python3 stages/03_unzip.py
     deps:
-      - stages/03_build.sh
-      - stages/csv2parquet.sh
+      - stages/03_unzip.py
+      - data
       - raw
-      - list
     outs:
       - brick

@@ -9,7 +9,7 @@ localpath=$(pwd)
 echo "Local path: $localpath"
 
 # Set list path
-listpath="$localpath"/list
+listpath="$localpath"/data
 echo "List path: $listpath"
 
 # Create list path
