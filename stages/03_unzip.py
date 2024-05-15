@@ -10,8 +10,8 @@ if not raw_path.exists():
     raw_path.mkdir(exist_ok=True)
 
 
-def unpack(zipfile):
-    extract_to = raw_path / zipfile.relative_to(data_path).stem
+def unpack(zipfile: Path):
+    extract_to = raw_path / zipfile.relative_to(data_path).stem[:-5]
     if not extract_to.exists():
         shutil.unpack_archive(zipfile, extract_to)
     if extract_to.exists() and os.stat(extract_to).st_size != 0:
