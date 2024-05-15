@@ -1,64 +1,75 @@
+from dataclasses import dataclass
+from functools import cached_property
 import json
+from json_flattener import flatten, GlobalConfig, KeyConfig
+import numpy as np
 import pandas as pd
 from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
-from itertools import chain, islice
 import os
 
 os.mkdir("brick")
 schemas_path = Path("schemas")
+raw_path = Path("raw")
 
-
-def open_schema_file(filename: str):
-    schema = None
-    with open(schemas_path / filename, "r") as f:
-        schema = json.load(f)
-    return schema
-
-
-animal_vet_schema = open_schema_file("animalandveterinarydrugevent_schema.json")
-
-def flatten_schema(schema: dict):
-    props: dict = schema["properties"]
-    props_types = {
-                key: {k: v["type"] for k, v in val["properties"].items() if "type" in v}
-                for key, val in props.items()
-                if "properties" in val
-            }
-    flat_types = {k: v["type"] for k, v in props.items() if "type" in v}
-    props_types |= flat_types
-    out = {k: "string" for k, v in props_types.items() if isinstance(v, dict)}
-    props_types |= out
-    return props_types
-
-
-def make_pd_compliant_schema(schema):
-    flattened = flatten_schema(schema)
-    return [{'name': k, 'data': v} for k, v in flattened]
-
-schema = flatten_schema(animal_vet_schema)
 
 def open_json_file(json_path: str):
     json_data = None
     with open(json_path, "r") as f:
         json_data = json.load(f)
     return json_data
-    
 
-def merge_json_with_schema(schema_path: str, json_path: str) -> dict:
-    schema = open_schema_file(schema_path)
-    json_data = open_json_file(json_path)
-    json_data['schema'] = schema
-    json_data['schema']['fields'] = [{'name': k, 'type': v} for k, v in flatten_schema(schema).items()]
-    json_data['data'] = json_data['results']
-    del json_data['results']
-    return json.dumps(json_data)
 
-data = merge_json_with_schema("animalandveterinarydrugevent_schema.json", "raw/animalandveterinary-event-0001-of-0001.json/animalandveterinary-event-0001-of-0001.json")
+json_paths = {
+    "ndc": "drug-ndc-*",
+    "drug_label": "drug-label-*",
+    "drugs_fda": "drug-drugsfda-*",
+}
 
-pd.read_json(data, orient="table",)
+# drugsfda['results']
+# openfda column where not null
+# keys: application_number, brand_name, generic_name, product_ndc, unii
+# products column
+# keys: active_ingredients
 
-animal_schema = flatten_schema(open_schema_file("animalandveterinarydrugevent_schema.json"))
 
-[{'name': k ,'type': v} for k, v in animal_schema.items()]
+def read_json_data(paths):
+    out = {}
+    for k, v in paths.items():
+        file_path = Path(raw_path).rglob(v)
+        all = filter(os.path.isfile, file_path)
+        out[k] = map(open_json_file, all)
+    return out
+
+
+JSON_DATA = read_json_data(json_paths)
+
+
+@dataclass(frozen=True)
+class DrugsFda:
+    raw = JSON_DATA["drugs_fda"]
+    cols: dict = {
+        "openfda": [
+            "brand_name",
+            "application_number",
+            "generic_name",
+            "product_ndc",
+            "unii",
+        ]
+    }
+
+    @cached_property
+    def get_raw(self):
+        return list(self.raw)[0]["results"]
+
+    def select_keys(self):
+        return [
+            {k: m["openfda"][k] for k in self.cols["openfda"] if k in m["openfda"]}
+            for m in self.get_raw
+            if "openfda" in m
+        ]
+        
+    @cached_property
+    def to_df(self):
+        return pd.DataFrame.from_records(self.select_keys())
