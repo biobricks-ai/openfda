@@ -31,3 +31,10 @@ stages:
       - raw
     outs:
       - brick
+  build:
+    cmd: python3 stages/04_build.py
+    deps:
+      - stages/04_build.py
+      - raw
+    outs:
+      - brick
