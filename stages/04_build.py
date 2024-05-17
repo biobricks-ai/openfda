@@ -1,20 +1,16 @@
 from dataclasses import dataclass, field
 from functools import cached_property
-from itertools import islice
 import json
-from json_flattener import flatten, GlobalConfig, KeyConfig
-import numpy as np
 import pandas as pd
 from pathlib import Path
-import pyarrow as pa
-import pyarrow.parquet as pq
 import os
 import toolz
 
-os.mkdir("brick")
-schemas_path = Path("schemas")
-raw_path = Path("raw")
+if not os.path.exists("brick"):
+    os.mkdir("brick")
 
+# raw_path exists from previous stage
+raw_path = Path("raw")
 
 def open_json_file(json_path: str):
     json_data = None
@@ -28,12 +24,6 @@ json_paths = {
     "drug_label": "drug-label-*",
     "drugs_fda": "drug-drugsfda-*",
 }
-
-# drugsfda['results']
-# openfda column where not null
-# keys: application_number, brand_name, generic_name, product_ndc, unii
-# products column
-# keys: active_ingredients
 
 
 def read_json_data(paths):
@@ -59,7 +49,7 @@ def get_first_val(vs):
 class DrugsFda:
     raw = JSON_DATA["drugs_fda"]
     cols: dict = field(
-        default={
+        default_factory=lambda: {
             "openfda": [
                 "brand_name",
                 "application_number",
@@ -78,7 +68,7 @@ class DrugsFda:
         return [
             {
                 k: m["openfda"][k]
-                for k in self.cols.default["openfda"]
+                for k in self.cols["openfda"]
                 if k in m["openfda"]
             }
             for m in self.get_raw
@@ -86,11 +76,11 @@ class DrugsFda:
         ]
 
     @cached_property
-    def to_df(self):
+    def to_df(self) -> pd.DataFrame:
         m = [toolz.valmap(get_first_val, m) for m in self.select_keys()]
         return pd.DataFrame.from_records(m)
 
-    def to_parquet(self, out_path):
+    def to_parquet(self, out_path: os.PathLike):
         self.to_df.to_parquet(out_path)
 
 
@@ -101,11 +91,10 @@ class Substances:
             "raw/other-substance-0001-of-0001/other-substance-0001-of-0001.json"
         )
     )
-    cols: dict = field(default={"codes": ["code_system", "code"]})
     
     @cached_property
     def get_raw(self):
-        return self.raw.default_factory()
+        return self.raw
     
     def select_keys(self):
         raw = self.get_raw["results"]
@@ -114,14 +103,20 @@ class Substances:
         return cas_codes
     
     @cached_property
-    def to_df(self):
+    def to_df(self) -> pd.DataFrame:
         cas_codes = self.select_keys()
         dfs = [pd.DataFrame.from_records(c) for c in cas_codes]
         return pd.concat(dfs)
+    
+    def to_parquet(self, out_path: os.PathLike):
+        self.to_df.to_parquet(out_path)
         
 
-fda = DrugsFda()
-fda.to_parquet("brick/drugs_fda.parquet")
+if __name__ == '__main__':
+    fda = DrugsFda()
+    print("Writing drugs_fda data to Parquet.")
+    fda.to_parquet("brick/drugs_fda.parquet")
 
-sub = Substances()
-sub.to_df
+    sub = Substances()
+    print("Writing other_substances data to Parquet.")
+    sub.to_parquet("brick/other_substances.parquet")

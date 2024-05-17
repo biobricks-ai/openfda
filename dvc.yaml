@@ -28,9 +28,8 @@ stages:
     deps:
       - stages/03_unzip.py
       - data
-      - raw
     outs:
-      - brick
+      - raw
   build:
     cmd: python3 stages/04_build.py
     deps:

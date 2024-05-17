@@ -31,3 +31,39 @@ stages:
       md5: 7c53648b51967453bfe38a75249d33bb.dir
       size: 498091
       nfiles: 1
+  unzip:
+    cmd: python3 stages/03_unzip.py
+    deps:
+    - path: data
+      hash: md5
+      md5: 7c53648b51967453bfe38a75249d33bb.dir
+      size: 498091
+      nfiles: 1
+    - path: stages/03_unzip.py
+      hash: md5
+      md5: 471d8fb69fccf238594e7080144fb740
+      size: 938
+    outs:
+    - path: raw
+      hash: md5
+      md5: 365dc41a0e0a55c3d1fcf1ac5d1307ef.dir
+      size: 235650800310
+      nfiles: 701
+  build:
+    cmd: python3 stages/04_build.py
+    deps:
+    - path: raw
+      hash: md5
+      md5: 365dc41a0e0a55c3d1fcf1ac5d1307ef.dir
+      size: 235650800310
+      nfiles: 701
+    - path: stages/04_build.py
+      hash: md5
+      md5: 88eeb5be1108262ef689ca5164eb4c4f
+      size: 2996
+    outs:
+    - path: brick
+      hash: md5
+      md5: eb366d7bbfbca17e8440b1648fdbd00f.dir
+      size: 15265083
+      nfiles: 2
