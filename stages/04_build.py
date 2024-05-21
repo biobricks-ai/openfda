@@ -111,12 +111,19 @@ class Substances:
     def to_parquet(self, out_path: os.PathLike):
         self.to_df.to_parquet(out_path)
 
-def get_first_keyval(m):
-    (k, v) = m
-    if len(v) == 1:
-        return (k, v)
-    elif len(v) > 1 and k != "effective_time":
-        return (k, "|".join((val for val in v)))
+def cleanup_labels(result):
+    out = {}
+    for k, v in result.items():
+        if k != "effective_time":
+            if len(v) >= 1 and isinstance(v, list):
+                out[k] = ",".join((val for val in v))
+            elif len(v) == 1:
+                out[k] = v
+            else:
+                out[k] = v
+        else:
+            out[k] = v
+    return out
 
 @dataclass(frozen=True)
 class DrugsLabel:
@@ -133,29 +140,12 @@ class DrugsLabel:
 
     @cached_property
     def to_df(self):
-        ks = self.select_keys()
-        time = None
-        for item in ks:
-            for d in item:
-                if "effective_time" in d:
-                    time = d["effective_time"]
-                    del d["effective_time"]
-                updated = toolz.valmap(get_first_val, d)
-                if time is not None:
-                    updated["effective_time"] = time
+        ks = [[cleanup_labels(result) for result in lst] for lst in self.select_keys()]
         dfs = [pd.DataFrame.from_records(m) for m in ks]
         return pd.concat(dfs)
     
-
-
-
-label = DrugsLabel()
-
-raw = label.get_raw
-
-label_df = label.to_df
-label_df.to_parquet("brick/label_test.parquet")
-ks = label.select_keys()
+    def to_parquet(self, out_path: os.PathLike):
+        self.to_df.to_parquet(out_path)
 
 if __name__ == "__main__":
     fda = DrugsFda()
@@ -166,8 +156,6 @@ if __name__ == "__main__":
     print("Writing other_substances data to Parquet.")
     sub.to_parquet("brick/other_substances.parquet")
 
-def itemmap_lambda(m):
-    (k, v) = m
-    return (k.upper(), v)
-
-dict(map(itemmap_lambda, {'hello': 'foo'}.items()))
+    labels = DrugsLabel()
+    print("Writing labels data to Parquet.")
+    labels.to_parquet("brick/drug_labels.parquet")
