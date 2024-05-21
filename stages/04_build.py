@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from functools import cached_property
+from itertools import islice
 import json
 import pandas as pd
 from pathlib import Path
@@ -11,6 +12,7 @@ if not os.path.exists("brick"):
 
 # raw_path exists from previous stage
 raw_path = Path("raw")
+
 
 def open_json_file(json_path: str):
     json_data = None
@@ -31,7 +33,7 @@ def read_json_data(paths):
     for k, v in paths.items():
         file_path = Path(raw_path).rglob(v)
         all = filter(os.path.isfile, file_path)
-        out[k] = map(open_json_file, all)
+        out[k] = list(map(open_json_file, all))
     return out
 
 
@@ -66,18 +68,14 @@ class DrugsFda:
 
     def select_keys(self):
         return [
-            {
-                k: m["openfda"][k]
-                for k in self.cols["openfda"]
-                if k in m["openfda"]
-            }
+            {k: m["openfda"][k] for k in self.cols["openfda"] if k in m["openfda"]}
             for m in self.get_raw
             if "openfda" in m
         ]
 
     @cached_property
     def to_df(self) -> pd.DataFrame:
-        m = [toolz.valmap(get_first_val, m) for m in self.select_keys()]
+        m = [toolz.itemmap(get_first_val, m) for m in self.select_keys()]
         return pd.DataFrame.from_records(m)
 
     def to_parquet(self, out_path: os.PathLike):
@@ -91,28 +89,75 @@ class Substances:
             "raw/other-substance-0001-of-0001/other-substance-0001-of-0001.json"
         )
     )
-    
+
     @cached_property
     def get_raw(self):
         return self.raw
-    
+
     def select_keys(self):
         raw = self.get_raw["results"]
         codes = [m["codes"] for m in raw if "codes" in m]
-        cas_codes = [(list(filter(lambda m: m["code_system"] == "CAS", code))) for code in codes]
+        cas_codes = [
+            (list(filter(lambda m: m["code_system"] == "CAS", code))) for code in codes
+        ]
         return cas_codes
-    
+
     @cached_property
     def to_df(self) -> pd.DataFrame:
         cas_codes = self.select_keys()
         dfs = [pd.DataFrame.from_records(c) for c in cas_codes]
         return pd.concat(dfs)
-    
+
     def to_parquet(self, out_path: os.PathLike):
         self.to_df.to_parquet(out_path)
-        
 
-if __name__ == '__main__':
+def get_first_keyval(m):
+    (k, v) = m
+    if len(v) == 1:
+        return (k, v)
+    elif len(v) > 1 and k != "effective_time":
+        return (k, "|".join((val for val in v)))
+
+@dataclass(frozen=True)
+class DrugsLabel:
+    raw: dict = JSON_DATA["drug_label"]
+
+    @cached_property
+    def get_raw(self):
+        return list(self.raw)
+
+    def select_keys(self):
+        raw = self.get_raw
+        results = [m["results"] for m in raw]
+        return results
+
+    @cached_property
+    def to_df(self):
+        ks = self.select_keys()
+        time = None
+        for item in ks:
+            for d in item:
+                if "effective_time" in d:
+                    time = d["effective_time"]
+                    del d["effective_time"]
+                updated = toolz.valmap(get_first_val, d)
+                if time is not None:
+                    updated["effective_time"] = time
+        dfs = [pd.DataFrame.from_records(m) for m in ks]
+        return pd.concat(dfs)
+    
+
+
+
+label = DrugsLabel()
+
+raw = label.get_raw
+
+label_df = label.to_df
+label_df.to_parquet("brick/label_test.parquet")
+ks = label.select_keys()
+
+if __name__ == "__main__":
     fda = DrugsFda()
     print("Writing drugs_fda data to Parquet.")
     fda.to_parquet("brick/drugs_fda.parquet")
@@ -120,3 +165,9 @@ if __name__ == '__main__':
     sub = Substances()
     print("Writing other_substances data to Parquet.")
     sub.to_parquet("brick/other_substances.parquet")
+
+def itemmap_lambda(m):
+    (k, v) = m
+    return (k.upper(), v)
+
+dict(map(itemmap_lambda, {'hello': 'foo'}.items()))
