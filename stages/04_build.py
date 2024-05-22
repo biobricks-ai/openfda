@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
 from functools import cached_property
-from itertools import islice
 import json
 import pandas as pd
 from pathlib import Path
@@ -146,11 +145,36 @@ class DrugsLabel:
     
     def to_parquet(self, out_path: os.PathLike):
         self.to_df.to_parquet(out_path)
+        
+@dataclass(frozen=True)
+class NDC:
+    raw: dict = JSON_DATA["ndc"]
+    
+    @cached_property
+    def get_raw(self):
+        return list(self.raw)
+
+    def select_keys(self):
+        raw = self.get_raw
+        results = [m["results"] for m in raw]
+        return results
+    
+    @cached_property
+    def to_df(self):
+        return pd.concat([pd.DataFrame.from_records(m) for m in self.select_keys()])
+    
+    def to_parquet(self, out_path: os.PathLike):
+        self.to_df.to_parquet(out_path)
+    
 
 if __name__ == "__main__":
     fda = DrugsFda()
     print("Writing drugs_fda data to Parquet.")
     fda.to_parquet("brick/drugs_fda.parquet")
+    
+    ndc = NDC()
+    print("Writing NDC data to Parquet.")
+    ndc.to_parquet("brick/test_ndc.parquet")
 
     sub = Substances()
     print("Writing other_substances data to Parquet.")
