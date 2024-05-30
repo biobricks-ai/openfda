@@ -53,7 +53,7 @@ class OpenFDA(Protocol):
     raw: dict = read_json_data(json_paths)
     
     @cached_property
-    def get_raw(self) -> list:
+    def get_raw(self) -> dict:
         return self.raw
     
     @cached_property
@@ -69,7 +69,7 @@ class OpenFDA(Protocol):
     @cached_property
     @abstractmethod
     def to_df(self) -> pd.DataFrame:
-        raise NotImplementedError
+        return pd.DataFrame.from_records(self.select_keys())
     
     def to_parquet(self, out_path):
         try:
@@ -135,14 +135,8 @@ class NDC(OpenFDA):
     def get_raw(self):
         return list(super().get_raw["ndc"])
 
-    def select_keys(self):
-        return super().select_keys()
-    
-    @cached_property
-    def to_df(self):
-        return pd.DataFrame.from_records(self.select_keys())
-    
-    def to_parquet(self, out_path: os.PathLike):
+    def __call__(self, out_path):
+        print("Writing NDC data to Parquet.")
         super().to_parquet(out_path)
         
 class UNII(OpenFDA):
@@ -161,23 +155,29 @@ class NSDE(OpenFDA):
     def get_raw(self):
         return list(super().get_raw["drugs_nsde"])
     
-    def select_keys(self):
-        return super().select_keys()
-    
     @cached_property
     def to_df(self):
-        return pd.DataFrame.from_records(self.select_keys())
+        return [pd.DataFrame.from_records(m) for m in super().select_keys()]
     
-    def to_parquet(self, out_path: os.PathLike):
-        super().to_parquet(out_path)
+    def to_parquet(self, out_path: str):
+        dfs = self.to_df
+        for i, df in enumerate(dfs):
+            out = Path(out_path.replace(".parquet", "_" + str(i))).with_suffix(".parquet")
+            df.to_parquet(out)
+            
+    def __call__(self, out_path):
+        print("Writing NSDE data to Parquet.")
+        self.to_parquet(out_path)
 
 if __name__ == "__main__":
     fda = DrugsFda()
     fda("brick/drugs_fda.parquet")
     
-    # ndc = NDC() not working right now...
-    # print("Writing NDC data to Parquet.")
-    # ndc.to_parquet("brick/test_ndc.parquet")
+    ndc = NDC()
+    ndc("brick/test_ndc.parquet")
+    
+    nsde = NSDE()
+    nsde("brick/nsde.parquet")
     
     unii = UNII()
     unii("brick/unii.parquet")
