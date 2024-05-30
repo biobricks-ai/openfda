@@ -1,34 +1,69 @@
----
 schema: '2.0'
 stages:
   download:
     cmd: stages/02_download.sh
     deps:
-    - hash: md5
-      md5: 3786630381c3c56720d26e239fd89a94.dir
+    - path: data
+      hash: md5
+      md5: 7c53648b51967453bfe38a75249d33bb.dir
+      size: 498091
       nfiles: 1
-      path: list
-      size: 471498
-    - hash: md5
-      md5: 4e31c2579181fc9bac5ee13a3761200c
-      path: stages/02_download.sh
+    - path: stages/02_download.sh
+      hash: md5
+      md5: 7fbdd4a9b056af88eb0e8455bff3803e
       size: 3256
     outs:
-    - hash: md5
-      md5: 5bee88051c751351818d6e24de90dd33.dir
-      nfiles: 3808
-      path: download
-      size: 105861938093
+    - path: download
+      hash: md5
+      md5: 37323e69bc146425e9732902ea72a3a4.dir
+      size: 113854412576
+      nfiles: 4024
   list:
     cmd: stages/01_list.sh
     deps:
-    - hash: md5
-      md5: 02e7cadc9df146b2310625db6795fd2f
-      path: stages/01_list.sh
+    - path: stages/01_list.sh
+      hash: md5
+      md5: b10b95bbf682d9d2b077814514e81bd4
       size: 425
     outs:
-    - hash: md5
-      md5: 3786630381c3c56720d26e239fd89a94.dir
+    - path: data
+      hash: md5
+      md5: 7c53648b51967453bfe38a75249d33bb.dir
+      size: 498091
       nfiles: 1
-      path: list
-      size: 471498
+  unzip:
+    cmd: python3 stages/03_unzip.py
+    deps:
+    - path: data
+      hash: md5
+      md5: 7c53648b51967453bfe38a75249d33bb.dir
+      size: 498091
+      nfiles: 1
+    - path: stages/03_unzip.py
+      hash: md5
+      md5: 471d8fb69fccf238594e7080144fb740
+      size: 938
+    outs:
+    - path: raw
+      hash: md5
+      md5: 365dc41a0e0a55c3d1fcf1ac5d1307ef.dir
+      size: 235650800310
+      nfiles: 701
+  build:
+    cmd: python3 stages/04_build.py
+    deps:
+    - path: raw
+      hash: md5
+      md5: 365dc41a0e0a55c3d1fcf1ac5d1307ef.dir
+      size: 235650800310
+      nfiles: 701
+    - path: stages/04_build.py
+      hash: md5
+      md5: a8a57a2a0fad3b82aa6abae8edc2508f
+      size: 4611
+    outs:
+    - path: brick
+      hash: md5
+      md5: e36f9d5e7dbe68adcc413cd384f00d2b.dir
+      size: 3159456240
+      nfiles: 8
