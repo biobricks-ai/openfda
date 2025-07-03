@@ -27,7 +27,7 @@ stages:
     cmd: stages/03_build.sh
     deps:
       - stages/03_build.sh
-      - stages/csv2parquet.sh
+      - stages/json2parquet.py
       - raw
       - list
     outs:
