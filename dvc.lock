@@ -1,34 +1,35 @@
----
 schema: '2.0'
 stages:
   download:
     cmd: stages/02_download.sh
     deps:
-    - hash: md5
-      md5: 3786630381c3c56720d26e239fd89a94.dir
+    - path: list
+      hash: md5
+      md5: 37a96cae6bc7143a285d1a5fce1526fa.dir
+      size: 535273
       nfiles: 1
-      path: list
-      size: 471498
-    - hash: md5
-      md5: 4e31c2579181fc9bac5ee13a3761200c
-      path: stages/02_download.sh
-      size: 3256
+    - path: stages/02_download.sh
+      hash: md5
+      md5: 44ac952b000a6dc2eca2a77cbdd69d9e
+      size: 4633
+      isexec: true
     outs:
-    - hash: md5
-      md5: 5bee88051c751351818d6e24de90dd33.dir
-      nfiles: 3808
-      path: download
-      size: 105861938093
+    - path: download
+      hash: md5
+      md5: 9a291fce6be66c9a297765ecf2f54f6b.dir
+      size: 127151510538
+      nfiles: 4325
   list:
     cmd: stages/01_list.sh
     deps:
-    - hash: md5
+    - path: stages/01_list.sh
+      hash: md5
       md5: 02e7cadc9df146b2310625db6795fd2f
-      path: stages/01_list.sh
       size: 425
+      isexec: true
     outs:
-    - hash: md5
-      md5: 3786630381c3c56720d26e239fd89a94.dir
+    - path: list
+      hash: md5
+      md5: 37a96cae6bc7143a285d1a5fce1526fa.dir
+      size: 535273
       nfiles: 1
-      path: list
-      size: 471498
