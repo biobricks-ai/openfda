@@ -1,30 +1,19 @@
 #!/usr/bin/env bash
 
-# Script to process unzipped files and build parquet files
+set -eu
 
-# Get local path
-localpath=$(pwd)
-echo "Local path: $localpath"
-
-# Set list path
-listpath="$localpath/list"
-mkdir -p $listpath
-echo "List path: $listpath"
-
-# Set raw path
-rawpath="$localpath/raw"
-echo "Raw path: $rawpath"
+source stages/00_config.sh
 
 # Create brick directory
-brickpath="$localpath/brick"
-mkdir -p $brickpath
-echo "Brick path: $brickpath"
+mkdir -p "$OPENFDA_BRICK_PATH"
 
-# Process raw files and create parquet files in parallel
-# calling a Python function with arguments input and output filenames
-cat $listpath/files.txt | tail -n +4 | xargs -P14 -n1 bash -c '
-  filename="${1%.*}"
-  echo '$rawpath'/$filename/$filename.txt
-  echo '$brickpath'/$filename.parquet
-  python stages/csv2parquet.py '$rawpath'/$filename.txt '$brickpath'/$filename.parquet
-' {}
+echo "OpenFDA Build Script"
+echo "==================="
+echo "Raw path: $OPENFDA_RAW_PATH"
+echo "Brick path: $OPENFDA_BRICK_PATH"
+echo "Processing files from download manifest..."
+
+# Call the Python build script
+python3 stages/build_parquet.py
+
+echo "Build process completed."
