@@ -11,3 +11,4 @@ logs
 /list
 result
 */__pycache__
+/build
