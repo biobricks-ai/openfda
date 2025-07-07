@@ -12,21 +12,26 @@ stages:
   list:
     cmd: stages/01_list.sh
     deps:
+      - stages/00_config.sh
       - stages/01_list.sh
     outs:
       - list
   download:
     cmd: stages/02_download.sh
     deps:
+      - stages/00_config.sh
       - stages/02_download.sh
+      - stages/02_download_async.py
       - list
     outs:
-      - download:
+      - raw:
           persist: true # Allow the stage to avoid downloading unchanged files
   build:
     cmd: stages/03_build.sh
     deps:
+      - stages/00_config.sh
       - stages/03_build.sh
+      - stages/build_parquet.py
       - stages/json2parquet.py
       - raw
       - list

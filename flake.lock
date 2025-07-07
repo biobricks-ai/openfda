@@ -44,6 +44,7 @@
       "original": {
         "owner": "biobricks-ai",
         "repo": "dev-shell",
+        "rev": "da0ad2bf4967585f7a8091e5e899ac3a929ae9ab",
         "type": "github"
       }
     },

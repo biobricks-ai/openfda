@@ -10,3 +10,4 @@ logs
 /raw
 /list
 result
+*/__pycache__
