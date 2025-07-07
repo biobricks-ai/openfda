@@ -2,24 +2,14 @@
 
 set -eu
 
-# Script to download files
+source stages/00_config.sh
 
-# Get local path
-localpath=$(pwd)
-echo "Local path: $localpath"
-
-# Set list path
-listpath="$localpath"/list
-echo "List path: $listpath"
+# Script to create list of files to download
 
 # Create list path
-mkdir -p "$listpath"
-cd "$listpath"
-
-# Define the endpoint base address
-endpoint="https://api.fda.gov"
+mkdir -p "$OPENFDA_LIST_PATH"
 
 # Retrieve the list of files to download from endpoint
-wget $endpoint/download.json
+wget "$OPENFDA_ENDPOINT/download.json" -O "$OPENFDA_LIST_PATH/download.json"
 
 echo "Download done."
