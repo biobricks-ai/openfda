@@ -24,7 +24,7 @@ stages:
       - stages/02_download_async.py
       - list
     outs:
-      - raw:
+      - download:
           persist: true # Allow the stage to avoid downloading unchanged files
   build:
     cmd: stages/03_build.sh
@@ -33,7 +33,7 @@ stages:
       - stages/03_build.sh
       - stages/build_parquet.py
       - stages/json2parquet.py
-      - raw
+      - download
       - list
     outs:
       - brick

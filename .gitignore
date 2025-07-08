@@ -7,7 +7,7 @@
 !.gitignore
 
 logs
-/raw
+/download
 /list
 result
 */__pycache__

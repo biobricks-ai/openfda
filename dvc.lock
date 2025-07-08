@@ -5,8 +5,8 @@ stages:
     deps:
     - path: stages/00_config.sh
       hash: md5
-      md5: 2cc5b2b0d201fc3c28b50f2fbff978c9
-      size: 308
+      md5: d64517cc51fcd976f1bcac76c0308f5b
+      size: 313
       isexec: true
     - path: stages/01_list.sh
       hash: md5
@@ -16,38 +16,38 @@ stages:
     outs:
     - path: list
       hash: md5
-      md5: e02c3cc988acff88f6b29fa5fe08d90b.dir
-      size: 535273
+      md5: 76ab7eae2bd7099630551619c7a6186e.dir
+      size: 534783
       nfiles: 1
   download:
     cmd: stages/02_download.sh
     deps:
     - path: list
       hash: md5
-      md5: e02c3cc988acff88f6b29fa5fe08d90b.dir
-      size: 535273
+      md5: 76ab7eae2bd7099630551619c7a6186e.dir
+      size: 534783
       nfiles: 1
     - path: stages/00_config.sh
       hash: md5
-      md5: 2cc5b2b0d201fc3c28b50f2fbff978c9
-      size: 308
+      md5: d64517cc51fcd976f1bcac76c0308f5b
+      size: 313
       isexec: true
     - path: stages/02_download.sh
       hash: md5
-      md5: 2ca188f226cc4773383dcff45b6c175d
-      size: 229
+      md5: 5d3282f22bfe197c8a1ba274d3335cb3
+      size: 158
       isexec: true
     - path: stages/02_download_async.py
       hash: md5
-      md5: 58b6950e781381ae5088db090bda87ca
-      size: 9820
+      md5: 63dafff0818a819102de634e777fcdfd
+      size: 9825
       isexec: true
     outs:
-    - path: raw
+    - path: download
       hash: md5
-      md5: 194d68fa4290f883db738666790dda42.dir
-      size: 127082411595
-      nfiles: 4324
+      md5: 42eee470f3ef3d408c1d0c6d716f0199.dir
+      size: 134648147274
+      nfiles: 4452
   build:
     cmd: stages/03_build.sh
     deps:
@@ -58,8 +58,8 @@ stages:
       nfiles: 1
     - path: raw
       hash: md5
-      md5: 194d68fa4290f883db738666790dda42.dir
-      size: 127082411595
+      md5: 41edf0202eae12da0037e3ad22d172be.dir
+      size: 127082411472
       nfiles: 4324
     - path: stages/00_config.sh
       hash: md5
@@ -82,6 +82,6 @@ stages:
     outs:
     - path: brick
       hash: md5
-      md5: ebab3575414ca8423ac5b1285d6e0617.dir
-      size: 168778389714
+      md5: c159d87c2ddde7fcbd8443df46d7cd63.dir
+      size: 167474332469
       nfiles: 2162
