@@ -141,7 +141,7 @@ async def main():
     local_path = Path.cwd()
     list_path = local_path / "list"
     listjson_path = list_path / "download.json"
-    download_path = local_path / "raw"
+    download_path = local_path / "download"
     
     print(f"Local path: {local_path}")
     print(f"List path: {list_path}")
