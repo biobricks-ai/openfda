@@ -1,87 +1,71 @@
 schema: '2.0'
 stages:
-  list:
-    cmd: stages/01_list.sh
-    deps:
-    - path: stages/00_config.sh
-      hash: md5
-      md5: d64517cc51fcd976f1bcac76c0308f5b
-      size: 313
-      isexec: true
-    - path: stages/01_list.sh
-      hash: md5
-      md5: 2ec02a3bbb6f41417eaf26a1bbda399d
-      size: 309
-      isexec: true
-    outs:
-    - path: list
-      hash: md5
-      md5: 76ab7eae2bd7099630551619c7a6186e.dir
-      size: 534783
-      nfiles: 1
   download:
     cmd: stages/02_download.sh
     deps:
-    - path: list
+    - path: data
       hash: md5
       md5: 76ab7eae2bd7099630551619c7a6186e.dir
       size: 534783
       nfiles: 1
-    - path: stages/00_config.sh
-      hash: md5
-      md5: d64517cc51fcd976f1bcac76c0308f5b
-      size: 313
-      isexec: true
     - path: stages/02_download.sh
       hash: md5
-      md5: 5d3282f22bfe197c8a1ba274d3335cb3
-      size: 158
-      isexec: true
-    - path: stages/02_download_async.py
-      hash: md5
-      md5: 63dafff0818a819102de634e777fcdfd
-      size: 9825
+      md5: 7fbdd4a9b056af88eb0e8455bff3803e
+      size: 3256
       isexec: true
     outs:
     - path: download
       hash: md5
-      md5: 42eee470f3ef3d408c1d0c6d716f0199.dir
-      size: 134648147274
+      md5: 5bc41e025ae87d4d1cc0f4951794c2e5.dir
+      size: 134647003052
       nfiles: 4452
-  build:
-    cmd: stages/03_build.sh
+  list:
+    cmd: stages/01_list.sh
     deps:
-    - path: download
+    - path: stages/01_list.sh
       hash: md5
-      md5: 42eee470f3ef3d408c1d0c6d716f0199.dir
-      size: 134648147274
-      nfiles: 4452
-    - path: list
+      md5: b10b95bbf682d9d2b077814514e81bd4
+      size: 425
+      isexec: true
+    outs:
+    - path: data
       hash: md5
       md5: 76ab7eae2bd7099630551619c7a6186e.dir
       size: 534783
       nfiles: 1
-    - path: stages/00_config.sh
+  unzip:
+    cmd: python3 stages/03_unzip.py
+    deps:
+    - path: data
       hash: md5
-      md5: d64517cc51fcd976f1bcac76c0308f5b
-      size: 313
-      isexec: true
-    - path: stages/03_build.sh
+      md5: 76ab7eae2bd7099630551619c7a6186e.dir
+      size: 534783
+      nfiles: 1
+    - path: stages/03_unzip.py
       hash: md5
-      md5: fbf62d3defbdcd39a1b66dd0da459a97
-      size: 390
-      isexec: true
-    - path: stages/build_parquet.py
+      md5: 66ef3bbfa1fcb473872bad7c1bf993cb
+      size: 2538
+    outs:
+    - path: raw
       hash: md5
-      md5: 927f83882a358e0c40ffdd12cf1df7a6
-      size: 6512
-    - path: stages/json2parquet.py
+      md5: 633dac35ed9d7179407fe717af4b3e63.dir
+      size: 11113398440
+      nfiles: 20
+  build:
+    cmd: python3 stages/04_build.py
+    deps:
+    - path: raw
       hash: md5
-      md5: d882d2aac246b4b6fd333e0f2fcdd32d
-      size: 1865
+      md5: 633dac35ed9d7179407fe717af4b3e63.dir
+      size: 11113398440
+      nfiles: 20
+    - path: stages/04_build.py
+      hash: md5
+      md5: a8a57a2a0fad3b82aa6abae8edc2508f
+      size: 4611
     outs:
     - path: brick
       hash: md5
-      md5: 7340a405efe1a4c122ea447387e78803.dir
-      size: 167631886881
-      nfiles: 2160
+      md5: c2a9a8b8e531d345c24db355054d78cc.dir
+      size: 3386044746
+      nfiles: 8

@@ -7,8 +7,10 @@
 !.gitignore
 
 logs
-/download
-/list
-result
-*/__pycache__
-/brick
+download
+raw
+data
+brick
+schemas
+
+**/__pycache__
