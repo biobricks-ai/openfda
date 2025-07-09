@@ -13,7 +13,8 @@
         devShells.default = dev-shell.devShells.${system}.default.overrideAttrs
           (oldAttrs: {
             buildInputs = oldAttrs.buildInputs ++ [
-              (python3.withPackages (ps: with ps; [ pandas pyarrow toolz]))
+              (python3.withPackages (ps: with ps; [ pandas pyarrow toolz])),
+              pkgs.parallel
             ];
           });
       });
