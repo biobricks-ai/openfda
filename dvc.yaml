@@ -14,26 +14,29 @@ stages:
     deps:
       - stages/01_list.sh
     outs:
-      - data
+      - list:
+          persist: true
   download:
     cmd: stages/02_download.sh
     deps:
       - stages/02_download.sh
-      - data
+      - list
     outs:
       - download:
           persist: true # Allow the stage to avoid downloading unchanged files
   unzip:
-    cmd: python3 stages/03_unzip.py
+    cmd: uv run python3 stages/03_unzip.py
     deps:
       - stages/03_unzip.py
-      - data
+      - download
     outs:
-      - raw
+      - raw:
+          persist: true
   build:
-    cmd: python3 stages/04_build.py
+    cmd: uv run python3 stages/04_build.py
     deps:
       - stages/04_build.py
       - raw
     outs:
-      - brick
+      - brick:
+          persist: true

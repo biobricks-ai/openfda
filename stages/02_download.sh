@@ -18,7 +18,7 @@ localpath=$(pwd)
 echo "Local path: $localpath"
 
 # Set list path
-listpath="$localpath/data"
+listpath="$localpath/list"
 echo "List path: $listpath"
 listjson="$(realpath "$listpath/download.json")"
 
@@ -78,9 +78,9 @@ download_partition() {
       headers=$(wget -S --timeout=300 --tries=3 -P ./"$dir"/ "$file_url" 2>&1)
   fi
 
-  # Print results
-  echo "$headers" | grep -i "saved" || true
-  echo "$headers" | grep -i "not modified on server" || true
+  # Print results (suppressed)
+  # echo "$headers" | grep -i "saved" || true
+  # echo "$headers" | grep -i "not modified on server" || true
 
   # Use a command group to avoid errors when Last-Modified is not present.
   # This can occur when the existing file was already up-to-date.
@@ -124,7 +124,7 @@ echo "Total download tasks: $total_tasks"
 # Run downloads in parallel
 # Limit to 4 concurrent downloads to avoid overwhelming the server
 echo "Starting parallel downloads (max 4 concurrent)..."
-parallel --bar -j 4 --colsep ' ' download_partition {1} {2} {3} {4} :::: "$download_tasks_file"
+parallel --bar -j 8 --colsep ' ' download_partition {1} {2} {3} {4} :::: "$download_tasks_file"
 
 # Clean up temporary file
 rm "$download_tasks_file"
