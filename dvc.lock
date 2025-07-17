@@ -5,7 +5,7 @@ stages:
     deps:
     - path: list
       hash: md5
-      md5: 8550205dd0735d22d3e187d29ef1312f.dir
+      md5: bbf3db0fe0ac3cf2c5c33e05a1afd5d8.dir
       size: 6081
       nfiles: 1
     - path: stages/02_download.sh
@@ -16,8 +16,8 @@ stages:
     outs:
     - path: download
       hash: md5
-      md5: b95ce6eded7252b9e295575858111d7d.dir
-      size: 2140827136
+      md5: b0a6bcd366d814845a782489a881f86b.dir
+      size: 2142177349
       nfiles: 40
   list:
     cmd: stages/01_list.sh
@@ -30,7 +30,7 @@ stages:
     outs:
     - path: list
       hash: md5
-      md5: 8550205dd0735d22d3e187d29ef1312f.dir
+      md5: bbf3db0fe0ac3cf2c5c33e05a1afd5d8.dir
       size: 6081
       nfiles: 1
   unzip:
@@ -38,8 +38,8 @@ stages:
     deps:
     - path: download
       hash: md5
-      md5: b95ce6eded7252b9e295575858111d7d.dir
-      size: 2140827136
+      md5: b0a6bcd366d814845a782489a881f86b.dir
+      size: 2142177349
       nfiles: 40
     - path: stages/03_unzip.py
       hash: md5
@@ -48,16 +48,16 @@ stages:
     outs:
     - path: raw
       hash: md5
-      md5: 6cc19e639a9c8b5335fb73f5ea2fc856.dir
-      size: 11205319312
+      md5: 74d42da7dce0d4cef789c0fca18130e0.dir
+      size: 11212041951
       nfiles: 20
   build:
     cmd: uv run python3 stages/04_build.py
     deps:
     - path: raw
       hash: md5
-      md5: 6cc19e639a9c8b5335fb73f5ea2fc856.dir
-      size: 11205319312
+      md5: 74d42da7dce0d4cef789c0fca18130e0.dir
+      size: 11212041951
       nfiles: 20
     - path: stages/04_build.py
       hash: md5
@@ -66,6 +66,6 @@ stages:
     outs:
     - path: brick
       hash: md5
-      md5: da32923d497c5d2a3d2583c91b06069d.dir
-      size: 3402936203
+      md5: aeb2757737e9a951997707ae51e1bf0e.dir
+      size: 3405166565
       nfiles: 8
